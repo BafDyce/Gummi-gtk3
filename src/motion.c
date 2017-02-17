@@ -165,6 +165,7 @@ gpointer motion_compile_thread(gpointer data)
   GuLatex* latex = NULL;
   gboolean precompile_ok = FALSE;
   gchar *editortext;
+  GuEditor* editortocompile = NULL;
 
   latex = gummi_get_latex();
 
@@ -207,7 +208,17 @@ gpointer motion_compile_thread(gpointer data)
       goto cont;
     }
 
-    latex_update_pdffile(latex, editor);
+    editortocompile = editor;
+    if( editor->rooteditor ){
+        /* If this editor is part of a project, compile the project's root
+        instead */
+        editortocompile = editor->rooteditor;
+        /* force recompilation */
+        latex->modified_since_compile = TRUE;
+    }
+
+    slog(L_DEBUG, "editor to compile: %p", editortocompile);
+    latex_update_pdffile(latex, editortocompile);
     *mc->typesetter_pid = 0;
     g_mutex_unlock(&mc->compile_mutex);
 
