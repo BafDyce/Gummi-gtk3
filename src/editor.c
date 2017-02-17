@@ -68,6 +68,7 @@ GuEditor* editor_new(GuMotion* mc)
   ec->workfd = -1;
   ec->fdname = NULL;
   ec->rootname = NULL;
+  ec->rooteditor = NULL;
   ec->filename = NULL;
   ec->basename = NULL;
   ec->workfile = NULL;

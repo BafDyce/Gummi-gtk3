@@ -54,6 +54,7 @@ struct _GuEditor {
   gint workfd;
   gchar* fdname;
   gchar* rootname;   /* root tex filename, if current file is include by it */
+  GuEditor* rooteditor; /* root tex editor, if current file is included by it */
   gchar* filename;   /* current opened file name in workspace */
   gchar* basename;   /* use this to form .dvi/.ps/.log etc. files */
   gchar* workfile;   /* filename of current editing file */
