@@ -214,13 +214,14 @@ gboolean project_load_files(const gchar* projfile, const gchar* content)
 
   GList* filelist = project_list_files(content);
   gint length = g_list_length(filelist);
+  GuEditor* rooteditor = NULL;
 
   for (i = 0; i < length; i++) {
     filename = g_list_nth_data(filelist, i);
     if (g_file_test(filename, G_FILE_TEST_EXISTS)) {
 
       if (!tabmanager_check_exists(filename)) {
-        gui_open_file(filename);
+        gui_open_file(filename, &rooteditor);
         // TODO: no direct calling this:
         g_active_editor->projfile = g_strdup(projfile);
       }

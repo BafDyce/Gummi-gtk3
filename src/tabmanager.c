@@ -117,11 +117,31 @@ void tabmanager_set_active_tab(int position)
 }
 
 
-void tabmanager_create_tab(OpenAct act, const gchar* filename, gchar* opt)
+void tabmanager_create_tab(OpenAct act, const gchar* filename, gchar* opt,
+                            GuEditor** rooteditor)
 {
   gint pos = 0;
 
   GuEditor* editor = gummi_new_environment(filename);
+  /* if this file is part of a project we need to save a reference to the
+  project's root file */
+  if( rooteditor != NULL ){
+    if( *rooteditor ){
+      /* if rooteditor contains a non-NULL value, we assume that this is a
+      pointer to the project's root file */
+      editor->rooteditor = *rooteditor;
+      slog(L_INFO, "The project's rooteditor: %p\n", editor->rooteditor);
+    } else {
+      /* otherwise, we assume that this is the project's root
+      file and save the pointer to the editor.
+      Setting editor->rooteditor to NULL isnot really necessary, but
+      it's better to be safe than soryy */
+      editor->rooteditor = NULL;
+      *rooteditor = editor;
+      slog(L_INFO, "This (%p) is the project's root editor\n", *rooteditor);
+    }
+  }
+  slog(L_INFO, " -> done\n");
 
   if (current_tab_replaceable(act)) {
     pos = tabmanagergui_replace_page(g_active_tab, editor);
